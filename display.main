@@ -1,0 +1,117 @@
+int homeOffice = D6; 
+int bedroom = D0;
+int tempLow= D4;
+int tempStandby= D3;
+int tempHigh= D2;
+int controlBedroom = A0;
+int controlOffice = A3;
+int controlTempStandby = A2;
+int controlTempHigh = A1;
+int isPower = A4; 
+int val = 0;
+int val2 = 0;
+int valStandby = 0;
+int timer = D5;
+int pulseWave = D7; 
+unsigned long timerunning = 0;
+unsigned long timelast = 0;
+//int analogmed = A4;
+
+void setup() {
+  pinMode (controlBedroom, INPUT);
+  pinMode (controlOffice, INPUT);
+  pinMode (controlTempStandby, INPUT);
+  pinMode (controlTempHigh, INPUT);
+  pinMode (isPower, OUTPUT);
+  pinMode (bedroom, OUTPUT);
+  pinMode (tempHigh, OUTPUT);
+  pinMode (tempStandby, OUTPUT);
+  pinMode (tempLow, OUTPUT);
+  pinMode (homeOffice, OUTPUT);
+  pinMode (timer, INPUT);
+  pinMode (pulseWave, OUTPUT);
+  //pinMode (analogmed, OUTPUT);
+  
+  digitalWrite (isPower, HIGH);
+  digitalWrite (tempLow, HIGH);
+  //analogWrite (analogmed, 2048);
+  
+}
+
+void loop() {
+  
+  
+  val = analogRead(controlBedroom);
+  val2 = digitalRead(timer);
+  if (val < 100) {
+      digitalWrite(bedroom, HIGH);
+  }
+  else if (val > 3500) {
+      digitalWrite(bedroom, LOW);
+  }
+  else {
+      if(val2 == 1)
+      {
+          digitalWrite(bedroom, HIGH);
+      }
+      else
+      {
+          digitalWrite(bedroom, LOW);
+      }
+  }
+  
+  val = analogRead(controlOffice);
+  if (val < 100) {
+      digitalWrite(homeOffice, HIGH);
+  }
+  else if (val > 3500) {
+      digitalWrite(homeOffice, LOW);
+  }
+  else {
+      if(val2 == 1)
+      {
+          digitalWrite(homeOffice, HIGH);
+      }
+      else
+      {
+          digitalWrite(homeOffice, LOW);
+      }
+  }
+  
+  val = analogRead(controlTempStandby);
+  if (val > 3500) {
+      digitalWrite(tempStandby, LOW);
+  }
+  else {
+      digitalWrite(tempStandby, HIGH);
+  }
+  
+  val = analogRead(controlTempHigh);
+  if (val < 100) {
+      digitalWrite(tempHigh, HIGH);
+  }
+  else if (val > 3500) {
+      digitalWrite(tempHigh, LOW);
+  }
+  else {
+      if(val2 == 1)
+      {
+          digitalWrite(tempHigh, HIGH);
+      }
+      else
+      {
+          digitalWrite(tempHigh, LOW);
+      }
+  }
+  
+  timerunning=millis();
+  if((unsigned long)(timerunning-timelast)>10000)
+  {
+    digitalWrite(pulseWave, LOW);
+    timelast=timerunning;
+  }
+  else if((unsigned long)(timerunning-timelast)>5000)
+  {
+    digitalWrite(pulseWave, HIGH);
+  }
+}
